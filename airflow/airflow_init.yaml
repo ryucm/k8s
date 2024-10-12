@@ -1,0 +1,17 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: airflow-db-init
+  namespace: k8s-system
+spec:
+  template:
+    spec:
+      containers:
+        - name: airflow-db-init
+          image: apache/airflow:2.10.2
+          command: ["airflow", "db", "init"]
+          env:
+            - name: AIRFLOW__CORE__SQL_ALCHEMY_CONN
+              value: "mysql://root:admin@mysql-service.k8s-system:3306/airflowdb"
+      restartPolicy: Never
+  backoffLimit: 4
