@@ -21,10 +21,16 @@ spec:
           command: ["airflow", "scheduler"]
           env:
             - name: AIRFLOW__CORE__SQL_ALCHEMY_CONN
-              value: "mysql://root:admin@mysql-service.k8s-system:3306/airflowdb"
+              valueFrom:
+                secretKeyRef:
+                  name: airflow-secrets
+                  key: mysql-connection
         - name: worker
           image: apache/airflow:latest
           command: ["airflow", "celery", "worker"]
           env:
             - name: AIRFLOW__CORE__SQL_ALCHEMY_CONN
-              value: "mysql://root:admin@mysql-service.k8s-system:3306/airflowdb"
+              valueFrom:
+                secretKeyRef:
+                  name: airflow-secrets
+                  key: mysql-connection

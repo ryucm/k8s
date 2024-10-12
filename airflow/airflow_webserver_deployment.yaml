@@ -23,4 +23,17 @@ spec:
             - containerPort: 8080
           env:
             - name: AIRFLOW__CORE__SQL_ALCHEMY_CONN
-              value: "mysql://root:admin@mysql-service.k8s-system:3306/airflowdb"
+              valueFrom:
+                secretKeyRef:
+                  name: airflow-secrets
+                  key: mysql-connection
+            - name: _AIRFLOW_WWW_USER_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: airflow-secrets
+                  key: airflow-admin-username
+            - name: _AIRFLOW_WWW_USER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: airflow-secrets
+                  key: airflow-admin-password

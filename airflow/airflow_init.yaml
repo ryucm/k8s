@@ -12,6 +12,9 @@ spec:
           command: ["airflow", "db", "init"]
           env:
             - name: AIRFLOW__CORE__SQL_ALCHEMY_CONN
-              value: "mysql://root:admin@mysql-service.k8s-system:3306/airflowdb"
+              valueFrom:
+                secretKeyRef:
+                  name: airflow-secrets
+                  key: mysql-connection
       restartPolicy: Never
   backoffLimit: 4

@@ -1,0 +1,40 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: airflow-create-user
+  namespace: k8s-system
+spec:
+  template:
+    spec:
+      containers:
+        - name: airflow-create-user
+          image: apache/airflow:2.10.2
+          command:
+            - "/bin/bash"
+            - "-c"
+            - |
+              airflow users create \
+                --username $AIRFLOW_ADMIN_USERNAME \
+                --firstname Admin \
+                --lastname User \
+                --role Admin \
+                --email admin@example.com \
+                --password $AIRFLOW_ADMIN_PASSWORD
+          env:
+            - name: AIRFLOW_ADMIN_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: airflow-secrets
+                  key: airflow-admin-username
+            - name: AIRFLOW_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: airflow-secrets
+                  key: airflow-admin-password
+            - name: AIRFLOW__CORE__SQL_ALCHEMY_CONN
+              valueFrom:
+                secretKeyRef:
+                  name: airflow-secrets
+                  key: mysql-connection
+      restartPolicy: Never
+  backoffLimit: 4
