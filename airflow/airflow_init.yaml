@@ -8,13 +8,16 @@ spec:
     spec:
       containers:
         - name: airflow-db-init
-          image: apache/airflow:2.10.2
+          image: airflow-manager:latest
+          imagePullPolicy: Never
           command: ["airflow", "db", "init"]
           env:
-            - name: AIRFLOW__CORE__SQL_ALCHEMY_CONN
+            - name: AIRFLOW__DATABASE__SQL_ALCHEMY_CONN
               valueFrom:
                 secretKeyRef:
                   name: airflow-secrets
                   key: mysql-connection
+            - name: AIRFLOW__CORE__LOAD_EXAMPLES
+              value: "false"
       restartPolicy: Never
   backoffLimit: 4

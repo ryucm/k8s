@@ -17,19 +17,21 @@ spec:
     spec:
       containers:
         - name: scheduler
-          image: apache/airflow:latest
+          image: airflow-manager:latest
+          imagePullPolicy: Never
           command: ["airflow", "scheduler"]
           env:
-            - name: AIRFLOW__CORE__SQL_ALCHEMY_CONN
+            - name: AIRFLOW__DATABASE__SQL_ALCHEMY_CONN
               valueFrom:
                 secretKeyRef:
                   name: airflow-secrets
                   key: mysql-connection
         - name: worker
-          image: apache/airflow:latest
+          image: airflow-manager:latest
+          imagePullPolicy: Never
           command: ["airflow", "celery", "worker"]
           env:
-            - name: AIRFLOW__CORE__SQL_ALCHEMY_CONN
+            - name: AIRFLOW__DATABASE__SQL_ALCHEMY_CONN
               valueFrom:
                 secretKeyRef:
                   name: airflow-secrets

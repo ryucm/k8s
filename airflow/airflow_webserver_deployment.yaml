@@ -17,12 +17,13 @@ spec:
     spec:
       containers:
         - name: webserver
-          image: apache/airflow:latest
+          image: airflow-manager:latest
+          imagePullPolicy: Never
           command: ["airflow", "webserver"]
           ports:
             - containerPort: 8080
           env:
-            - name: AIRFLOW__CORE__SQL_ALCHEMY_CONN
+            - name: AIRFLOW__DATABASE__SQL_ALCHEMY_CONN
               valueFrom:
                 secretKeyRef:
                   name: airflow-secrets
